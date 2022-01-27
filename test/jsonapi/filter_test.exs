@@ -30,6 +30,9 @@ defmodule Inquisitor.JsonApi.FilterTest do
 
   test "builds query with composed matchers" do
     q = Composed.build_query(User, @context, %{"filter" => %{"name" => "Brian", "age" => "99"}})
-    assert to_sql(q) == {~s{SELECT u0."id", u0."name", u0."age" FROM "users" AS u0 WHERE (u0."age" = $1) AND (u0."name" = $2)}, [99, "Brian"]}
+
+    assert to_sql(q) ==
+             {~s{SELECT u0."id", u0."name", u0."age" FROM "users" AS u0 WHERE (u0."age" = $1) AND (u0."name" = $2)},
+              [99, "Brian"]}
   end
 end

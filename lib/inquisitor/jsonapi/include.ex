@@ -65,7 +65,7 @@ defmodule Inquisitor.JsonApi.Include do
       def build_query(query, "include", includes, context) do
         includes
         |> String.split(",")
-        |> Enum.reduce(query, fn(include, query) ->
+        |> Enum.reduce(query, fn include, query ->
           build_include_query(query, include, context)
         end)
       end
@@ -77,7 +77,7 @@ defmodule Inquisitor.JsonApi.Include do
   defmacro __before_compile__(_env) do
     quote generated: true do
       def build_include_query(query, include, context), do: query
-      defoverridable [build_include_query: 3]
+      defoverridable build_include_query: 3
     end
   end
 
@@ -98,6 +98,7 @@ defmodule Inquisitor.JsonApi.Include do
 
   defp build_segments([segment | []]),
     do: String.to_existing_atom(segment)
+
   defp build_segments([segment | segments]) do
     [{String.to_existing_atom(segment), build_segments(segments)}]
   end

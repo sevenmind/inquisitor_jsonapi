@@ -35,18 +35,20 @@ defmodule Inquisitor.JsonApi.Page do
     quote generated: true do
       def build_page_query(query, %{"number" => number, "size" => size}, _context) do
         number = Inquisitor.JsonApi.Page.typecast_as_integer(number)
-        size   = Inquisitor.JsonApi.Page.typecast_as_integer(size)
+        size = Inquisitor.JsonApi.Page.typecast_as_integer(size)
 
         offset = (number - 1) * size
 
         Inquisitor.JsonApi.Page.offset_and_limit(query, offset: offset, limit: size)
       end
+
       def build_page_query(query, %{"offset" => offset, "limit" => limit}, _context) do
         Inquisitor.JsonApi.Page.offset_and_limit(query, offset: offset, limit: limit)
       end
+
       def build_page_query(query, _pages, _context), do: query
 
-      defoverridable [build_page_query: 3]
+      defoverridable build_page_query: 3
     end
   end
 
@@ -63,7 +65,8 @@ defmodule Inquisitor.JsonApi.Page do
   def page_data(query, repo, %{"page" => %{"number" => number, "size" => size}} = _params) do
     build_page_data(query, repo, typecast(number), typecast(size))
   end
-  def page_data(query, repo,  %{"page" => %{"offset" => offset, "limit" => limit}} = _params) do
+
+  def page_data(query, repo, %{"page" => %{"offset" => offset, "limit" => limit}} = _params) do
     build_page_data(query, repo, typecast(offset), typecast(limit))
   end
 
@@ -92,12 +95,13 @@ defmodule Inquisitor.JsonApi.Page do
   end
 
   defp typecast(integer) when is_integer(integer), do: integer
+
   defp typecast(integer) when is_binary(integer) do
     String.to_integer(integer)
   end
 
   @doc false
-  def offset_and_limit(query, [offset: offset, limit: limit]) do
+  def offset_and_limit(query, offset: offset, limit: limit) do
     query
     |> Ecto.Query.offset(^offset)
     |> Ecto.Query.limit(^limit)
@@ -107,5 +111,6 @@ defmodule Inquisitor.JsonApi.Page do
   def typecast_as_integer(integer) when is_binary(integer) do
     String.to_integer(integer)
   end
+
   def typecast_as_integer(integer), do: integer
 end

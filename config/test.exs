@@ -1,6 +1,7 @@
 import Config
 
 config :inquisitor_jsonapi, ecto_repos: [Repo]
+
 config :inquisitor_jsonapi, Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",

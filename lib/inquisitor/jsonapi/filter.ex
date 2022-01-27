@@ -52,7 +52,7 @@ defmodule Inquisitor.JsonApi.Filter do
   """
   require Inquisitor
 
- defmacro __using__(_opts) do
+  defmacro __using__(_opts) do
     quote do
       @doc """
       Construct a Ecto Query filtering by query parameters
