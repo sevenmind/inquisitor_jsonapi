@@ -52,22 +52,30 @@ defmodule Inquisitor.JsonApi.Filter do
   """
   require Inquisitor
 
-  defmacro __using__(_opts) do
+ defmacro __using__(_opts) do
     quote do
+      @doc """
+      Construct a Ecto Query filtering by query parameters
+      """
       def build_query(query, "filter", filters, context) do
-        Enum.reduce(filters, query, fn({key, value}, query) ->
+        Enum.reduce(filters, query, fn {key, value}, query ->
           build_filter_query(query, key, value, context)
         end)
       end
 
-      @before_compile Inquisitor.JsonApi.Filter
-    end
-  end
+      @doc """
+      You can use `build_filter_query/4` to define matchers:
 
-  defmacro __before_compile__(_env) do
-    quote generated: true do
+        def build_filter_query(query, "foo", value, _conn) do
+          Ecto.Query.where(query, [r], r.foo == ^value)
+        end
+
+        def build_filter_query(query, "baz", value, _conn) do
+          Ecto.Query.where(query, [r], r.baz > ^value)
+        end
+      """
       def build_filter_query(query, _key, _value, _context), do: query
-      defoverridable [build_filter_query: 4]
+      defoverridable build_filter_query: 4
     end
   end
 end
