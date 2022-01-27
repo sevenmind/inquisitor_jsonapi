@@ -3,8 +3,8 @@ defmodule InquisitorJsonapi.Mixfile do
 
   def project do
     [app: :inquisitor_jsonapi,
-     version: "0.1.0",
-     elixir: "~> 1.3",
+     version: "0.2.0",
+     elixir: "~> 1.10",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      elixirc_paths: elixirc_paths(Mix.env),
@@ -48,10 +48,10 @@ defmodule InquisitorJsonapi.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:inquisitor, "~> 0.5.0"},
+    [{:inquisitor, "~> 0.5"},
      {:ecto, "> 2.0.0"},
-     {:plug, "~> 1.3.0", only: :test},
-     {:earmark, "~> 0.1", only: :dev},
+     {:plug, "~> 1.3", only: :test},
+     {:earmark, "~> 1.0", only: :dev},
      {:ex_doc, "~> 0.11", only: :dev},
      {:postgrex, "> 0.0.0", only: :test}]
   end
