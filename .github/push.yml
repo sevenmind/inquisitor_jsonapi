@@ -11,10 +11,24 @@ jobs:
         include:
           - elixir: '1.11.4'
             otp: '23.2.7'
-          - elixir: '1.7.4'
-            otp: '20.3.8'
+          # - elixir: '1.7.4'
+          #   otp: '20.3.8'
 
     runs-on: ubuntu-20.04
+    env:
+      POSTGRES_HOST: localhost
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
 
     steps:
       - name: Checkout
@@ -46,6 +60,11 @@ jobs:
             elixir-build-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-
       - name: Compile Elixir deps
         run: mix deps.compile
+
+      - name: Initalize Staging Database
+        env: 
+          MIX_ENV: test
+        run: mix ecto.init
 
       - name: Run check
         run: mix check
